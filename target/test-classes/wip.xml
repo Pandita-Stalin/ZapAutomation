@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="ZAP WIP Tests" parallel="none" configfailurepolicy="skip">
+    <test name="wip Tests" preserve-order="true" allow-return-values="true">
+        <groups>
+            <define name="wiptests">
+                <include name="wip"/>
+            </define>
+            <run>
+                <include name="wiptests"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="selenium.*"/>
+        </packages>
+    </test>
+</suite>

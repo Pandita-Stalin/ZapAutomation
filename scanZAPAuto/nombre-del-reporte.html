@@ -1,0 +1,4446 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>ZAP Scanning Report</title>
+<style type="text/css">
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #000;
+	font-size: 13px;
+}
+
+h1 {
+	text-align: center;
+	font-weight: bold;
+	font-size: 32px
+}
+
+h3 {
+	font-size: 16px;
+}
+
+table {
+	border: none;
+	font-size: 13px;
+}
+
+td, th {
+	padding: 3px 4px;
+	word-break: break-word;
+}
+
+th {
+	font-weight: bold;
+	background-color: #666666;
+}
+
+td {
+	background-color: #e8e8e8;
+}
+
+.spacer {
+	margin: 10px;
+}
+
+.spacer-lg {
+	margin: 40px;
+}
+
+.indent1 {
+	padding: 4px 20px;
+}
+
+.indent2 {
+	padding: 4px 40px;
+}
+
+.risk-3 {
+	background-color: red;
+	color: #FFF;
+}
+
+.risk-2 {
+	background-color: orange;
+	color: #FFF;
+}
+
+.risk-1 {
+	background-color: yellow;
+	color: #000;
+}
+
+.risk-0 {
+	background-color: blue;
+	color: #FFF;
+}
+
+.risk--1 {
+	background-color: green;
+	color: #FFF;
+}
+
+.summary {
+	width: 45%;
+}
+
+.summary th {
+	color: #FFF;
+}
+
+.alerts {
+	width: 75%;
+}
+
+.alerts th {
+	color: #FFF;
+}
+
+.results {
+	width: 100%;
+}
+
+.results th {
+	text-align: left;
+}
+
+.left-header {
+	display: inline-block;
+}
+</style>
+</head>
+<body>
+	<h1>
+		<!-- The ZAP Logo -->
+		<img
+			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAABqbAAAamwHdbkbTAAAAB3RJTUUH4QsKDDQPKy6k8AAABxpJREFUWMO9l31sVWcdxz+/55xzbwt9QddJExClvIzNxTKJDZi22oJSbFZpmRb4g8sfhpEIwXQNTKh0NYgiMKIwo5AsdIxdQldGNBN5W2OTFRVcIZE1YwExcXOdc1DK+nLvOc/PP87tC9CWsj98bp6ck3Ofc57v7+37/T3wYGMucBR4F/gK/8exAugAdPXq1bpx40YFekZdHYuP+8PuGP+lAc8CmzIyMtLq6uqora3FcRwAzp49m/7Wv5O95tsNEfyEKvwH9B1V2hT7GnB+PABkhGePAvVA9dy5c6mvr2fp0qX3LOru7iYrK4toSQ1OXhGKohpOiyVQe0NVn9PGFb8iFofGFSMCMMPulwEXgbdXrlxZ3dHRQXt7+4ibA2RmZtLc3Ex/y/O4fg8RMUSMS8RxiRiPqPE+4xrnl07syA3Q+aN5wADlwO1oNPpqQ0NDfl9fH4cPH2bOnDn3dV9VVRWVlVV88vsteNF0XCO4xuA6Bs9xiBgPz/EmueKcIxavHyk/BPjnli1bpm3btu1TZ2hmxkTk8aeYMK8aay1WFVWwqgSqBDYgqQFJGxygccWa4e86IhJpbW39Zk5ODgUFBZ8KwOLFZeyr/wHZs0vw0jMxIqFpAuFt+EOYZ/OrAi41t96dhF8HThcWFnpnzpwhGo0+MIhnamvZs+8AM55uIhn4+Cnrkza8Wqv4NiBhfXwNCgxy3jauuKMKPOCPrpHSU2fOUlJS8sAg8qZP50bGY0xeuIFk4JO0SnIYiMAqSRuQDPyPgsbqh++ugqSsPXGC+WsoLS1lzZqnHxhA40svcfPvfyDNjRARwTOCJ+E0IjgiOGIwRnIkFl97NwBMX9dPvEfLSC+t5cCB/eTk5Ix78ylTplBcXMxDjy3EweIZISKSqoxwcyOCYwRXHETkuSEAsTjE4kVGTLrjpdP7p33U1NTQ2dk5bgCbN28Ow7BoA8YmcVOWR1KWuyKIgEEwYjBiJhN75Ushr15qRp747g9dcRZ4RtCuf3HhdBMlpQuZNm3auAAUFBRw+fJlWl/dy9SCaqwGIBIyJGBTUwemWqzy/mAIRPmaEUGsJeNbz+IVfJ+ioiI2bNgwbi80NTUxJWciV47/GM9Lwwg4CA6CSblbBqYYRPjqEACRR8JaVcRPkPHlJ5m66kX27W8kL2/6uMPR3t7Ox+++yQcXjmLEIEYQA8YIkuIHSYVDkBnDk3DSEDwAi5c5mUfWNtGVPovc3FwOHTp0XwDZ2dm0nTvH9Td+zSedVxDVkIQAEQ1BoIgKCpnmflqpQcAXyjYxo6KeVatWUVZWRiKRGPO1+fPns2vXLjoOr7uvFA8HcHMoQ8IHmkqOINnH1d81kJeXR0VFRcqKkUcQBLS0tHD79u2QXHq7UmkIqgKqoIKKAnQPNiSqXFG0QFVCXbcGK4pVIdnTBcDOnTupqqoa06q2tjZKS0uZ8LmZzKiox5nwWXzfx9qBfmGgCkDRa4MeUNE3repg2QSEiwMFk5nDF8vrWLZsGTNnzqS9vX1UAEVFRezYsYOeD68y8fNPEFifAL2rDAfBnJdhGv0NzzgtoYYbHGOICkSMIWKEqBE8x+X91v18cKGJyspKDh48SFZW1ohAlixZQstfLzM99iK9iQQJqySsxVfFDyz9Nolv/fw7gumsPtIbMZE0zxhcR3DFEDVCZIDTjeA5Drb3Jv84sYOu639j69atNDQ0jAgiN3cyPQ/NJXvhM/QnEwRW8dWSDAL6bbLTHlyee0cVWNWfBhpgVbEWfFUSqiSGqVoyCCCaxayndjKn+nm2736BzIyJHDt27B4AFy9eovvtU3R3nA5DkFJEXwNUtWHEptSsPtIXNW7UMy4mJSLeMA+4IrhCKC6A46XR+VYz772xj/z8fJqampg1a9bg906ePElZWRlZy3+DZuSGPUGQ/G/QuDznHjVMeaEyaS2+WqxVbMryxMDVKv0W+qzSr0pPoo/Mx8uZs/51rgdTmD17NrFYbJArFi9ezKZNm7h1dD1B4JO0PgG23KR6QxnlYLHXM846z7i4oX4P6vmA9Q6ENMsQZyiGxK1OPjr5M5Kd77B7925qamoAWLBgAX+59jFU7tmivy3fPvq5INXDSyx+3DXOd1xx8YzBiGBMKCIDwmKMDLEWEnoMUDdK37U2bp/6BQ9PSueV+BEWLVpEdnYW3be6f67wo7EOJoMgiMX3uuKs84zBEQcjghjBMCAmhF1niskGCMaiqFWs8ehrj+Off5nCwkK2b99OcXExwFTgvdEB3AmizIi85oqTNgDCSKrPFWV4DFRD/beqWLX4YUXdst0ffk+b168CVqZWpwN9YwO4Wzhi8c1GpM6ISTcYREJPMOSAQYZLHc1upY5meyjfBq/XAUwGbgL9Y4dgrBGLFwtSITAPkekCk1L73wS9qsoFxR6nceWfx/O5/wGLCSMJ+zJrfwAAAABJRU5ErkJggg=="
+			alt="" />
+		ZAP Scanning Report
+	</h1>
+	<p />
+	
+
+	<h2>
+		
+		Site: https://defendtheweb.net
+		
+	</h2>
+
+	<h3>
+		Generated on dom, 28 nov 2021 23:59:27
+	</h3>
+
+	
+		<h3 class="left-header">Summary of Alerts</h3>
+		<table class="summary">
+			<tr>
+				<th width="45%"
+					height="24">Nivel de riesgo</th>
+				<th width="55%"
+					align="center">Number of Alerts</th>
+			</tr>
+			<tr>
+				<td class="risk-3">
+					<div>Alto</div>
+				</td>
+				<td align="center">
+					<div>0</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="risk-2">
+					<div>Medio</div>
+				</td>
+				<td align="center">
+					<div>0</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="risk-1">
+					<div>Bajo</div>
+				</td>
+				<td align="center">
+					<div>9</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="risk-0">
+					<div>Informativo</div>
+				</td>
+				<td align="center">
+					<div>1</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="risk--1">
+					<div>				False Positives:</div>
+				</td>
+				<td align="center">
+					<div>0</div>
+				</td>
+			</tr>
+		</table>
+		<div class="spacer-lg"></div>
+	
+
+	
+		<h3>Alertas</h3>
+		<table class="alerts">
+			<tr>
+				<th width="60%" height="24">Nombre</th>
+				<th width="20%"
+					align="center">Nivel de riesgo</th>
+				<th width="20%"
+					align="center">Number of Instances</th>
+			</tr>
+			<tr>
+				<td><a href="#10202">Ausencia de fichas (tokens) Anti-CSRF</a></td>
+				<td align="center" class="risk-1">Bajo</td>
+				<td align="center">6</td>
+			</tr>
+			<tr>
+				<td><a href="#10010">Cookie No HttpOnly Flag</a></td>
+				<td align="center" class="risk-1">Bajo</td>
+				<td align="center">2</td>
+			</tr>
+			<tr>
+				<td><a href="#10011">Cookie Without Secure Flag</a></td>
+				<td align="center" class="risk-1">Bajo</td>
+				<td align="center">2</td>
+			</tr>
+			<tr>
+				<td><a href="#10054">Cookie without SameSite Attribute</a></td>
+				<td align="center" class="risk-1">Bajo</td>
+				<td align="center">2</td>
+			</tr>
+			<tr>
+				<td><a href="#10017">Cross-Domain JavaScript Source File Inclusion</a></td>
+				<td align="center" class="risk-1">Bajo</td>
+				<td align="center">94</td>
+			</tr>
+			<tr>
+				<td><a href="#10096">Divulgación de la marca de hora - Unix</a></td>
+				<td align="center" class="risk-1">Bajo</td>
+				<td align="center">5</td>
+			</tr>
+			<tr>
+				<td><a href="#10015">Incomplete or No Cache-control Header Set</a></td>
+				<td align="center" class="risk-1">Bajo</td>
+				<td align="center">3</td>
+			</tr>
+			<tr>
+				<td><a href="#2">Private IP Disclosure</a></td>
+				<td align="center" class="risk-1">Bajo</td>
+				<td align="center">1</td>
+			</tr>
+			<tr>
+				<td><a href="#10021">X-Content-Type-Options Header Missing</a></td>
+				<td align="center" class="risk-1">Bajo</td>
+				<td align="center">2</td>
+			</tr>
+			<tr>
+				<td><a href="#10027">Divulgación de información - Comentarios sospechosos</a></td>
+				<td align="center" class="risk-0">Informativo</td>
+				<td align="center">21</td>
+			</tr>
+		</table>
+		<div class="spacer-lg"></div>
+	
+
+	
+		<h3>Alert Detail</h3>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-1"><a
+						id="10202"></a>
+						<div>Bajo</div></th>
+					<th class="risk-1">Ausencia de fichas (tokens) Anti-CSRF</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>No se encontraron fichas (tokens) Anti-CSRF en un formulario HTML.</div>
+							<br />
+						
+							<div>Una solicutud falsa entre sitios en un ataque que compromete y obliga a una víctima a enviar su solicitud HTTP a un destino objetivo sin su conocimiento o intención para poder realizar una acción como víctima. La causa oculta es la funcionalidad de la aplicación utilizando acciones de URL/formulario que pueden ser adivinados de forma repetible. La naturaleza del ataque es que CSRG explota la confianza que un sitio web proporciona a un usuario. Por el contrario, las cadenas de comandos de los sitios cruzados (XSS) explotan la confianza que un usuario proporciona en un sitio web. Al igual que XSS, los ataques CSRG no son de forma necesaria de sitios cruzados, pero hay la posibilidad de que si pueden serlo. La falsificación de las solicitudes ente los sitios también se conoce como CSRF, XSRG, ataques con un solo clic, montaje de sesión, diputado confundido y navegación en alta mar.</div>
+							<br />
+						
+							<div>Los ataques de CSRG son muy efectivos en varias situaciones, que incluyen:</div>
+							<br />
+						
+							<div>*La victima tiene una sesión activa en el sitio de destino.</div>
+							<br />
+						
+							<div>    *La víctima se autoriza por medio de la autenticación HTTP en el sitio de destino.</div>
+							<br />
+						
+							<div>    *La víctima se encuentra en la misma red local que el sitio de destino.</div>
+							<br />
+						
+							<div>CSRF se ha utilizado especialmente para poder realizar una acción contra un sitio objetivo utilizando los privilegios de la víctima, pero se han revelado técnicas recientes para difundir información al obtener el acceso a la respuesta. El riesgo de divulgación de información aumenta de forma drástica cuando el sitio de destino se encuentra vulnerable a XSS, porque XSS se puede utilizar como una plataforma para CSRF, lo que le permite al atacante que opere desde adentro de los líites de la misma política de origen.</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/have-you-been-pwned">https://defendtheweb.net/article/have-you-been-pwned</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;form id=&quot;passwordTester&quot; onsubmit=&quot;event.preventDefault(); checkPassword();&quot;&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth">https://defendtheweb.net/auth</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;form action=&quot;/auth&quot; method=&quot;post&quot;&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth">https://defendtheweb.net/auth</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;form action=&quot;/auth/signup&quot; method=&quot;post&quot;&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth/signup">https://defendtheweb.net/auth/signup</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;form action=&quot;/auth&quot; method=&quot;post&quot;&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth/signup">https://defendtheweb.net/auth/signup</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;form action=&quot;/auth/signup&quot; method=&quot;post&quot;&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/contact">https://defendtheweb.net/help/contact</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;form
+            class=&quot;form--contact-us&quot;
+            action=&quot;?contact-us&quot;            method=&quot;POST&quot;            enctype=&quot;multipart/form-data&quot;
+                    &gt;</td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">6</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Frase: Arquitectura y Diseño</div>
+							<br />
+						
+							<div>Utilice una biblioteca o marco comprobado que no acepte que ocura esta debilidad o que proporcione construcciones que permitan que esta debilidad sea mas sencilla de evitar.</div>
+							<br />
+						
+							<div>Por ejemplo, utilice el paquete anti-CSRG como el CSRGuard de OWASP.</div>
+							<br />
+						
+							<div>Fase: Implementación</div>
+							<br />
+						
+							<div>Asegúrese de que su aplicación esté libre de fallas de secuencias de comandos entre sitios, ya que la mayoría de las defensas de CSRF pueden detenerse por alto por medio del uso de secuencias de comandos manejadas por el atacante.</div>
+							<br />
+						
+							<div>Fase: Arquitectura y Diseño</div>
+							<br />
+						
+							<div>Origina un nonce único para cada uno de los formularios, coloque el nonce en el formularo y confirme la independencia al obtener el formulario. Asegúrese de que el nonce no sea predecible (CWE-330).</div>
+							<br />
+						
+							<div>Usted tiene que tener en cuenta que esto puede pasar desapercibido utilizando XSS.</div>
+							<br />
+						
+							<div>Identificar las operaciones que sean especialmente peligrosas. Cuando el usuario desarrolla una operación peligrosa, envíe una solicitud de confirmación de forma separada para poder garantizar que el usuario tenga la intención de desarrollar esa operación.</div>
+							<br />
+						
+							<div>Usted tiene que tener en cuenta que esto puede pasar desapercibido utilizando XSS.</div>
+							<br />
+						
+							<div>Utilice el control de gestión de la sesión de ESAPI.</div>
+							<br />
+						
+							<div>Este control introduce un elemento para CSRF.</div>
+							<br />
+						
+							<div>No utilice el método GET para ninguna de las solicitudes que puedan desencadenar un cambio de estado.</div>
+							<br />
+						
+							<div>Fase: Implementación</div>
+							<br />
+						
+							<div>Revise que la solicitud se creó en la página esperada. Esto podría quebrar la funcionalidad auténtica, ya que los usuarios o los representantes puede ser que hayan desactivado el envío de Referer por motivos de privacidad.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%">
+							<a href="http://projects.webappsec.org/Cross-Site-Request-Forgery">http://projects.webappsec.org/Cross-Site-Request-Forgery</a>
+							<br />
+						
+							<a href="http://cwe.mitre.org/data/definitions/352.html">http://cwe.mitre.org/data/definitions/352.html</a>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/352.html">352</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">9</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/10202/">10202</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-1"><a
+						id="10010"></a>
+						<div>Bajo</div></th>
+					<th class="risk-1">Cookie No HttpOnly Flag</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>A cookie has been set without the HttpOnly flag, which means that the cookie can be accessed by JavaScript. If a malicious script can be run on this page then the cookie will be accessible and can be transmitted to another site. If this is a session cookie then session hijacking may be possible.</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net">https://defendtheweb.net</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">PHPSESSID</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">Set-Cookie: PHPSESSID</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/">https://defendtheweb.net/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">PHPSESSID</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">Set-Cookie: PHPSESSID</td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">2</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Ensure that the HttpOnly flag is set for all cookies.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%">
+							<a href="https://owasp.org/www-community/HttpOnly">https://owasp.org/www-community/HttpOnly</a>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/1004.html">1004</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">13</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/10010/">10010</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-1"><a
+						id="10011"></a>
+						<div>Bajo</div></th>
+					<th class="risk-1">Cookie Without Secure Flag</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>A cookie has been set without the secure flag, which means that the cookie can be accessed via unencrypted connections.</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net">https://defendtheweb.net</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">PHPSESSID</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">Set-Cookie: PHPSESSID</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/">https://defendtheweb.net/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">PHPSESSID</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">Set-Cookie: PHPSESSID</td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">2</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Whenever a cookie contains sensitive information or is a session token, then it should always be passed using an encrypted channel. Ensure that the secure flag is set for cookies containing such sensitive information.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%">
+							<a href="https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/06-Session_Management_Testing/02-Testing_for_Cookies_Attributes.html">https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/06-Session_Management_Testing/02-Testing_for_Cookies_Attributes.html</a>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/614.html">614</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">13</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/10011/">10011</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-1"><a
+						id="10054"></a>
+						<div>Bajo</div></th>
+					<th class="risk-1">Cookie without SameSite Attribute</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>Una cookie ha sido enviada sin el atributo SameSite, lo que significa que la cookie puede ser enviada como un resultado de una solicitud &#39;cross-site&#39;. </div>
+							<br />
+						
+							<div>El atributo SameSite es una medida efectiva contra solicitudes de falsificación de cross-site, inclusión de secuencias cross-site, y ataques sincronizados.</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net">https://defendtheweb.net</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">PHPSESSID</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">Set-Cookie: PHPSESSID</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/">https://defendtheweb.net/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">PHPSESSID</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">Set-Cookie: PHPSESSID</td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">2</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Asegúrese que el atributo SameSite está establecido como &#39;lax&#39; o idealmente &#39;strict&#39; para todas las cookies.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%">
+							<a href="https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site">https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site</a>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/1275.html">1275</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">13</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/10054/">10054</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-1"><a
+						id="10017"></a>
+						<div>Bajo</div></th>
+					<th class="risk-1">Cross-Domain JavaScript Source File Inclusion</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>The page includes one or more script files from a third-party domain.</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net">https://defendtheweb.net</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net">https://defendtheweb.net</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net">https://defendtheweb.net</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/home.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/home.min.js?v=&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net">https://defendtheweb.net</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net">https://defendtheweb.net</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/">https://defendtheweb.net/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/">https://defendtheweb.net/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/">https://defendtheweb.net/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/home.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/home.min.js?v=&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/">https://defendtheweb.net/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/">https://defendtheweb.net/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/4-lesser-known-attack-types">https://defendtheweb.net/article/4-lesser-known-attack-types</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/4-lesser-known-attack-types">https://defendtheweb.net/article/4-lesser-known-attack-types</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/4-lesser-known-attack-types">https://defendtheweb.net/article/4-lesser-known-attack-types</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/4-lesser-known-attack-types">https://defendtheweb.net/article/4-lesser-known-attack-types</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips">https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips">https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips">https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips">https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial">https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial">https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial">https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial">https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora">https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora">https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora">https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora">https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/have-you-been-pwned">https://defendtheweb.net/article/have-you-been-pwned</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/have-you-been-pwned">https://defendtheweb.net/article/have-you-been-pwned</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/have-you-been-pwned">https://defendtheweb.net/article/have-you-been-pwned</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/have-you-been-pwned">https://defendtheweb.net/article/have-you-been-pwned</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/have-you-been-pwned">https://defendtheweb.net/article/have-you-been-pwned</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/vendor/sha1.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/vendor/sha1.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles">https://defendtheweb.net/articles</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles">https://defendtheweb.net/articles</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles">https://defendtheweb.net/articles</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles">https://defendtheweb.net/articles</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/coding">https://defendtheweb.net/articles/coding</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/coding">https://defendtheweb.net/articles/coding</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/coding">https://defendtheweb.net/articles/coding</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/coding">https://defendtheweb.net/articles/coding</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/hacking">https://defendtheweb.net/articles/hacking</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/hacking">https://defendtheweb.net/articles/hacking</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/hacking">https://defendtheweb.net/articles/hacking</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/hacking">https://defendtheweb.net/articles/hacking</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/privacy">https://defendtheweb.net/articles/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/privacy">https://defendtheweb.net/articles/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/privacy">https://defendtheweb.net/articles/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/privacy">https://defendtheweb.net/articles/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth">https://defendtheweb.net/auth</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth">https://defendtheweb.net/auth</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth">https://defendtheweb.net/auth</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/auth.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/auth.min.js?v=&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth">https://defendtheweb.net/auth</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth">https://defendtheweb.net/auth</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth">https://defendtheweb.net/auth</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/vendor/mailcheck.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/vendor/mailcheck.min.js?v=&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth/signup">https://defendtheweb.net/auth/signup</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth/signup">https://defendtheweb.net/auth/signup</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth/signup">https://defendtheweb.net/auth/signup</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/auth.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/auth.min.js?v=&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth/signup">https://defendtheweb.net/auth/signup</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth/signup">https://defendtheweb.net/auth/signup</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth/signup">https://defendtheweb.net/auth/signup</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/vendor/mailcheck.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/vendor/mailcheck.min.js?v=&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/dashboard">https://defendtheweb.net/dashboard</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/dashboard">https://defendtheweb.net/dashboard</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/dashboard">https://defendtheweb.net/dashboard</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/dashboard.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/dashboard.min.js?v=&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/dashboard">https://defendtheweb.net/dashboard</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/dashboard">https://defendtheweb.net/dashboard</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/dashboard">https://defendtheweb.net/dashboard</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/vendor/push.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/vendor/push.js?v=&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/discussions">https://defendtheweb.net/discussions</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/discussions">https://defendtheweb.net/discussions</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/discussions">https://defendtheweb.net/discussions</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/discussions.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/discussions.min.js?v=&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/discussions">https://defendtheweb.net/discussions</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/discussions">https://defendtheweb.net/discussions</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help">https://defendtheweb.net/help</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help">https://defendtheweb.net/help</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help">https://defendtheweb.net/help</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help">https://defendtheweb.net/help</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/conduct/code-of-conduct">https://defendtheweb.net/help/conduct/code-of-conduct</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/conduct/code-of-conduct">https://defendtheweb.net/help/conduct/code-of-conduct</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/conduct/code-of-conduct">https://defendtheweb.net/help/conduct/code-of-conduct</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/conduct/code-of-conduct">https://defendtheweb.net/help/conduct/code-of-conduct</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/contact">https://defendtheweb.net/help/contact</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/contact">https://defendtheweb.net/help/contact</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/contact">https://defendtheweb.net/help/contact</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/contact">https://defendtheweb.net/help/contact</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/privacy">https://defendtheweb.net/legal/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/privacy">https://defendtheweb.net/legal/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/privacy">https://defendtheweb.net/legal/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/privacy">https://defendtheweb.net/legal/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/terms">https://defendtheweb.net/legal/terms</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/terms">https://defendtheweb.net/legal/terms</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/terms">https://defendtheweb.net/legal/terms</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/terms">https://defendtheweb.net/legal/terms</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/profile/">https://defendtheweb.net/profile/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/profile/">https://defendtheweb.net/profile/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://twemoji.maxcdn.com/v/latest/twemoji.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://twemoji.maxcdn.com/v/latest/twemoji.min.js&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/profile/">https://defendtheweb.net/profile/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/jquery.min.js</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/jquery.min.js&quot;&gt;&lt;/script&gt;</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/profile/">https://defendtheweb.net/profile/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">https://zhr3.co.uk/js/script.min.js?v=</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">&lt;script src=&quot;https://zhr3.co.uk/js/script.min.js?v=&quot; crossorigin=&quot;anonymous&quot; defer&gt;&lt;/script&gt;</td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">94</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Ensure JavaScript source files are loaded from only trusted sources, and the sources can&#39;t be controlled by end users of the application.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%"></td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/829.html">829</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">15</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/10017/">10017</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-1"><a
+						id="10096"></a>
+						<div>Bajo</div></th>
+					<th class="risk-1">Divulgación de la marca de hora - Unix</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>Una marca de tiempo ha sido divulgada por el servidor de la aplicación/el navegador - Unix</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/4-lesser-known-attack-types">https://defendtheweb.net/article/4-lesser-known-attack-types</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">10446819</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial">https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">45444342</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora">https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">02100345</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/dashboard">https://defendtheweb.net/dashboard</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">23602676</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/discussions">https://defendtheweb.net/discussions</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">23602676</td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">5</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Confirmar manualmente que los datos de marca de hora no son sensibles, y que los datos no pueden ser agregados a patrones explotables de divulgación.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%">
+							<a href="http://projects.webappsec.org/w/page/13246936/Information%20Leakage">http://projects.webappsec.org/w/page/13246936/Information%20Leakage</a>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/200.html">200</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">13</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/10096/">10096</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-1"><a
+						id="10015"></a>
+						<div>Bajo</div></th>
+					<th class="risk-1">Incomplete or No Cache-control Header Set</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>The cache-control header has not been set properly or is missing, allowing the browser and proxies to cache content.</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/extras/playground/jf94jhg03.txt">https://defendtheweb.net/extras/playground/jf94jhg03.txt</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">Cache-Control</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%"></td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/manifest.json">https://defendtheweb.net/manifest.json</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">Cache-Control</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">no-cache, no-transform</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/robots.txt">https://defendtheweb.net/robots.txt</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">Cache-Control</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%"></td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">3</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Whenever possible ensure the cache-control HTTP header is set with no-cache, no-store, must-revalidate.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%">
+							<a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#web-content-caching">https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#web-content-caching</a>
+							<br />
+						
+							<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control</a>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/525.html">525</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">13</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/10015/">10015</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-1"><a
+						id="2"></a>
+						<div>Bajo</div></th>
+					<th class="risk-1">Private IP Disclosure</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>A private IP (such as 10.x.x.x, 172.x.x.x, 192.168.x.x) or an Amazon EC2 private hostname (for example, ip-10-0-56-78) has been found in the HTTP response body. This information might be helpful for further attacks targeting internal systems.</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora">https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">192.168.2.1</td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">1</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Remove the private IP address from the HTTP response body.  For comments, use JSP/ASP/PHP comment instead of HTML/JavaScript comment which can be seen by client browsers.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%">
+							<a href="https://tools.ietf.org/html/rfc1918">https://tools.ietf.org/html/rfc1918</a>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/200.html">200</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">13</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/2/">2</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-1"><a
+						id="10021"></a>
+						<div>Bajo</div></th>
+					<th class="risk-1">X-Content-Type-Options Header Missing</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to &#39;nosniff&#39;. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/extras/playground/jf94jhg03.txt">https://defendtheweb.net/extras/playground/jf94jhg03.txt</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">X-Content-Type-Options</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%"></td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/robots.txt">https://defendtheweb.net/robots.txt</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%">X-Content-Type-Options</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%"></td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">2</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to &#39;nosniff&#39; for all web pages.</div>
+							<br />
+						
+							<div>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%">
+							<a href="http://msdn.microsoft.com/en-us/library/ie/gg622941%28v=vs.85%29.aspx">http://msdn.microsoft.com/en-us/library/ie/gg622941%28v=vs.85%29.aspx</a>
+							<br />
+						
+							<a href="https://owasp.org/www-community/Security_Headers">https://owasp.org/www-community/Security_Headers</a>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/693.html">693</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">15</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/10021/">10021</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+			<table class="results">
+				<tr height="24">
+					<th width="20%" class="risk-0"><a
+						id="10027"></a>
+						<div>Informativo</div></th>
+					<th class="risk-0">Divulgación de información - Comentarios sospechosos</th>
+				</tr>
+				<tr>
+					<td width="20%">DescripciÃ³n</td>
+					<td width="80%">
+							<div>The response appears to contain suspicious comments which may help an attacker. Note: Matches made within script blocks or files are against the entire content not only comments.</div>
+							
+						</td>
+				</tr>
+				<TR vAlign="top">
+					<TD colspan="2"></TD>
+				</TR>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net">https://defendtheweb.net</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/">https://defendtheweb.net/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/4-lesser-known-attack-types">https://defendtheweb.net/article/4-lesser-known-attack-types</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips">https://defendtheweb.net/article/beyond-root-custom-firmware-for-embedded-mobile-chips</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial">https://defendtheweb.net/article/buffer-overflow-to-run-root-shell-full-tutorial</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora">https://defendtheweb.net/article/build-a-virtual-private-network-with-wireguard-and-fedora</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/article/have-you-been-pwned">https://defendtheweb.net/article/have-you-been-pwned</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles">https://defendtheweb.net/articles</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/coding">https://defendtheweb.net/articles/coding</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/hacking">https://defendtheweb.net/articles/hacking</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/articles/privacy">https://defendtheweb.net/articles/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth">https://defendtheweb.net/auth</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/auth/signup">https://defendtheweb.net/auth/signup</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/dashboard">https://defendtheweb.net/dashboard</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/discussions">https://defendtheweb.net/discussions</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help">https://defendtheweb.net/help</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/conduct/code-of-conduct">https://defendtheweb.net/help/conduct/code-of-conduct</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/help/contact">https://defendtheweb.net/help/contact</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/privacy">https://defendtheweb.net/legal/privacy</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/legal/terms">https://defendtheweb.net/legal/terms</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+					<tr>
+						<td width="20%"
+							class="indent1">URL</td>
+						<td width="80%"><a href="https://defendtheweb.net/profile/">https://defendtheweb.net/profile/</a></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">MÃ©todo</td>
+						<td width="80%">GET</td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Parameter</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Atacar</td>
+						<td width="80%"></td>
+					</tr>
+					<tr>
+						<td width="20%"
+							class="indent2">Evidence</td>
+						<td width="80%">TODO</td>
+					</tr>
+				
+				<tr>
+					<td width="20%">Instances</td>
+					<td width="80%">21</td>
+				</tr>
+				<tr>
+					<td width="20%">Solution</td>
+					<td width="80%">
+							<div>Eliminar todos los comentarios que devuelvan información que podría ayudar a un atacante y arreglar cualquier problema subyacente al que se refieran.</div>
+							
+						</td>
+				</tr>
+				<tr>
+					<td width="20%">Reference</td>
+					<td width="80%"></td>
+				</tr>
+				<tr>
+					<td width="20%">CWE Id</td>
+					<td width="80%"><a
+						href="https://cwe.mitre.org/data/definitions/200.html">200</a></td>
+				</tr>
+				<tr>
+					<td width="20%">WASC Id</td>
+					<td width="80%">13</td>
+				</tr>
+				<tr>
+					<td width="20%">Plugin Id</td>
+					<td width="80%"><a
+						href="https://www.zaproxy.org/docs/alerts/10027/">10027</a></td>
+				</tr>
+			</table>
+			<div class="spacer"></div>
+		
+	
+</body>
+</html>
+
