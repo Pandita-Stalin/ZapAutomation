@@ -1,5 +1,4 @@
 import Utils.Waiting;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Proxy;
@@ -18,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
 
 /**
  * @author Dani "Bolombo" Bonilla
@@ -26,12 +26,9 @@ import java.nio.file.Paths;
 public class ZapAuto {
 
     private static final String ZAP_PROXYHOST = "localhost";
-    private static final int ZAP_PROXYPORT = 8050;
-    //private static final String URl = "https://preproduccio.govern.cat/president";
-    private static final String URl = "https://defendtheweb.net/";
-
+    private static final int ZAP_PROXYPORT = 8090;
+    private static final String URl = "https://www.arthemis.tech";
     public static final Logger Log = LogManager.getLogger(ZapAuto.class);
-    private boolean debug = false;
 
     private static WebDriver driver;
 
@@ -44,7 +41,6 @@ public class ZapAuto {
             seleniumProxy.setProxyAutoconfigUrl("http://" + ZAP_PROXYHOST + ":" + ZAP_PROXYPORT);
             zapApp.ascan.removeAllScans();
             zapApp.core.newSession("","");
-            zapApp.spider.scan(URl,null, null,null,null);
             return seleniumProxy;
         }catch (Exception e){
             Log.info(e);
@@ -52,7 +48,11 @@ public class ZapAuto {
         }
     }
 
-
+    protected void spiderScan() throws ClientApiException {
+        System.out.println("-- Starting the SPIDER Scan --");
+        zapApp.spider.scan(URl,null, null,null,null);
+        System.out.println("-- The SPIDER Scan was Complete!! --");
+    }
 
     protected void scanningRealTime() throws Exception {
         System.out.println("-- Waiting for passive scan to complete --");
@@ -62,7 +62,7 @@ public class ZapAuto {
             ApiResponse response = zapApp.pscan.recordsToScan(); // getting a response
 
             //iterating till we get response as "0".
-            while(!response.toString().equals("0")) {
+            while(!response.toString().equals("100")) {
                 response =	zapApp.pscan.recordsToScan();
             }
         } catch (ClientApiException e1) {
@@ -75,12 +75,13 @@ public class ZapAuto {
         System.out.println("--- Scan Progress completed! ---");
     }
 
-
     protected void scanningURL() throws Exception {
         BrowserFactory browserConfig = new BrowserFactory();
-        driver = (WebDriver) browserConfig.BrowserSetupOptionsDriver(apiZapSetup(),true,true);
         Waiting.time(5000);
+        driver = (WebDriver) browserConfig.BrowserSetupOptionsDriver(apiZapSetup(),true,true);
         driver.get(URl);
+        spiderScan();
+        Waiting.time(5000);
         scanningRealTime();
         Waiting.time(5000);
     }
@@ -92,7 +93,7 @@ public class ZapAuto {
 
     protected void ZapReporting() throws ClientApiException, IOException {
         String report = new String(zapApp.core.htmlreport());
-        Path fileReportPath = Paths.get(System.getProperty("user.dir") + "/scanZAPAuto/nombre-del-reporte.html");
+        Path fileReportPath = Paths.get(System.getProperty("user.dir") + "/scanZAPAuto/"+ DateFormat.getDateInstance() + URl + ".html");
         Files.deleteIfExists(fileReportPath);
         Files.write(fileReportPath, report.getBytes());
         RemoveAndCleanTheSession();

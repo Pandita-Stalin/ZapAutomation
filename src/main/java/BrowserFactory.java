@@ -28,49 +28,57 @@ public class BrowserFactory {
 
 
     private String selectRandomBrowser(){
-       int browseMax = 4;
+       int browseMax = 2;
        int browserType = RandomNumersInRange.getRandomNumberInRange(1, browseMax);
        System.out.println("The browser selected is: ");
-       switch (browserType){
-           case 1:
-               String chrome = "Chrome";
-               System.out.println(chrome);
-               return chrome;
-           case 2:
-               String firefox = "Firefox";
-               System.out.println(firefox);
-               return firefox;
-           case 3:
-               String egde = "Edge";
-               System.out.println(egde);
-               return egde;
-           case 4:
-               String safari = "Safari";
-               System.out.println(safari);
-               return safari;
-       }
+        switch (browserType) {
+            case 1 -> {
+                String chrome = "Chrome";
+                System.out.println(chrome);
+                return chrome;
+            }
+            case 2 -> {
+                String firefox = "Firefox";
+                System.out.println(firefox);
+                return firefox;
+            }
+            /*case 3 -> {
+                String egde = "Edge";
+                System.out.println(egde);
+                return egde;
+            }
+            case 4 -> {
+                String safari = "Safari";
+                System.out.println(safari);
+                return safari;
+            }*/
+        }
        return null;
    }
 
     private Object browserSetup(String selectBrowser, Proxy expectedProxy, Boolean acceptSSLCerts, Boolean acceptInsecCerts){
-            switch (selectBrowser){
-                case "Chrome":
-                    driver = new ChromeDriver(chromeDriverSetup(expectedProxy,acceptSSLCerts,acceptInsecCerts));
-                    return driver;
-                case "Firefox":
-                    driver = new FirefoxDriver(firefoxOptionsSetup(expectedProxy,acceptSSLCerts,acceptInsecCerts));
-                    return driver;
-                case "Edge":
-                    driver = new EdgeDriver(edgeOptionsSetup(expectedProxy,acceptSSLCerts,acceptInsecCerts));
-                    return driver;
-                case "Safari":
-                    driver = new SafariDriver(safariOptionsSetup(expectedProxy,acceptSSLCerts,acceptInsecCerts));
-                    return driver;
+        switch (selectBrowser) {
+            case "Chrome" -> {
+                driver = new ChromeDriver(chromeDriverSetup(expectedProxy, acceptSSLCerts, acceptInsecCerts));
+                return driver;
             }
+            case "Firefox" -> {
+                driver = new FirefoxDriver(firefoxOptionsSetup(expectedProxy, acceptSSLCerts, acceptInsecCerts));
+                return driver;
+            }/*
+            case "Edge" -> {
+                driver = new EdgeDriver(edgeOptionsSetup(expectedProxy, acceptSSLCerts, acceptInsecCerts));
+                return driver;
+            }
+            case "Safari" -> {
+                driver = new SafariDriver(safariOptionsSetup(expectedProxy, acceptSSLCerts, acceptInsecCerts));
+                return driver;
+            }*/
+        }
            return null;
        }
 
-   //Different's Browsers setup
+   //Difference's Browsers setup
 
     private ChromeOptions chromeDriverSetup(Proxy expectedProxy, Boolean acceptSSLCerts, Boolean acceptInsecCerts){
        WebDriverManager.chromedriver().setup();
@@ -104,6 +112,4 @@ public class BrowserFactory {
         safaOpts.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, acceptInsecCerts);
         return safaOpts;
     }
-
-
 }
