@@ -1,4 +1,4 @@
-package Utils;
+package tools;
 
 public class Waiting {
 
