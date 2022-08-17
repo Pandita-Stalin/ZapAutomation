@@ -1,17 +1,14 @@
-import Utils.Waiting;
+package com.capge.pack;
+
+import browserFactory.BrowserFactory;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.CapabilityType;
 import org.zaproxy.clientapi.core.ApiResponse;
-import org.zaproxy.clientapi.core.ApiResponseElement;
 import org.zaproxy.clientapi.core.ClientApi;
 import org.zaproxy.clientapi.core.ClientApiException;
+import tools.Waiting;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,9 +24,9 @@ public class ZapAuto {
 
     private static final String ZAP_PROXYHOST = "localhost";
     private static final int ZAP_PROXYPORT = 8090;
-    private static final String URl = "https://www.arthemis.tech";
+    //private static final String URl = "https://www.arthemis.tech";
+    private static final String URl = "https://defendtheweb.net/";
     public static final Logger Log = LogManager.getLogger(ZapAuto.class);
-
     private static WebDriver driver;
 
     ClientApi zapApp = new ClientApi(ZAP_PROXYHOST, ZAP_PROXYPORT);
@@ -53,6 +50,7 @@ public class ZapAuto {
         zapApp.spider.scan(URl,null, null,null,null);
         System.out.println("-- The SPIDER Scan was Complete!! --");
     }
+
 
     protected void scanningRealTime() throws Exception {
         System.out.println("-- Waiting for passive scan to complete --");
@@ -103,6 +101,9 @@ public class ZapAuto {
         scanningURL();
         ZapReporting();
         driver.quit();
+    }
+    public void runZap() throws Exception {
+        runningZap();
     }
 
 }
