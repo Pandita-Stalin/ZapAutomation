@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="ZAP PostgresConnection Tests" parallel="none" configfailurepolicy="skip">
+    <test name="Postgres Connection Tests" preserve-order="true" allow-return-values="true">
+        <groups>
+            <define name="PostgresConnection">
+                <include name="postgresConnection"/>
+            </define>
+            <run>
+                <include name="postgresConnection"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="selenium.*"/>
+        </packages>
+    </test>
+</suite>
